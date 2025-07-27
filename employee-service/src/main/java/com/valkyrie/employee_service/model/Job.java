@@ -1,11 +1,13 @@
-package com.valkyrie.job_service.model;
+package com.valkyrie.employee_service.model;
 
-import jakarta.persistence.*;
+//import jakarta.persistence.Entity;
+//import jakarta.persistence.Id;
+//import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "job")
+//@Entity
+//@Table(name = "job")
 public class Job {
-    @Id
+//    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String description;

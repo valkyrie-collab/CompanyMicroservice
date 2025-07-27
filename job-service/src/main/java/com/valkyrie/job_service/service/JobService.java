@@ -39,7 +39,9 @@ public class JobService {
 
     //Find job By Id
     public Store<Job> findJobById(String id) {
-        return Store.initialize(HttpStatus.OK, repo.findById(id).orElse(defaultJob));
+        Job job = repo.findById(id).orElse(defaultJob);
+        return !job.toString().equals(defaultJob.toString())? Store.initialize(HttpStatus.OK, job) :
+                Store.initialize(HttpStatus.BAD_REQUEST, defaultJob);
     }
 
     //Find Jobs By Salary

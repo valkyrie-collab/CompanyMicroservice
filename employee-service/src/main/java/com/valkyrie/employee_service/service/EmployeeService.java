@@ -1,26 +1,40 @@
 package com.valkyrie.employee_service.service;
 
+import com.valkyrie.employee_service.feign.JobFeignController;
 import com.valkyrie.employee_service.model.Employee;
+import com.valkyrie.employee_service.model.EmployeeWrapper;
 import com.valkyrie.employee_service.repository.EmployeeRepository;
 import com.valkyrie.employee_service.model.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class EmployeeService {
-    private static final Employee defaultEmployee = new Employee().setId("null").setFirstName("null")
+    private static final EmployeeWrapper defaultWrapper = new EmployeeWrapper().setId("null").setFirstName("null")
             .setLastName("null").setQualification("null").setJobStation("null").setSalary(-1);
+
+    private static final Employee defaultEmployee = new Employee().setId("null").setFirstName("null")
+            .setLastName("null").setQualification("null").setJobStation("null").setSalary(-1).setJobId("null");
+
     private EmployeeRepository repo;
     @Autowired
     private void setRepo(EmployeeRepository repo) {this.repo = repo;}
 
+    private JobFeignController feign;
+    @Autowired
+    private void setFeign(JobFeignController feign) {this.feign = feign;}
+
     //Employee save and Update
     public Store<String> save(Employee employee) {
-        boolean checkId = employee.getId() == null;
+        boolean checkId = employee.getId() == null && feign.getJobById(
+                employee.getJobId()).getStatusCode().equals(HttpStatusCode.valueOf(200));
 
         if (checkId) {
             employee = employee.setId("employee" + UUID.randomUUID());
@@ -37,16 +51,41 @@ public class EmployeeService {
     }
 
     //Find Employee By Id
-    public Store<Employee> findEmployeeById(String id) {
+    public Store<EmployeeWrapper> findEmployeeById(String id) {
         Employee employee = repo.findById(id).orElse(defaultEmployee);
-        return Store.initialize(HttpStatus.OK, employee);
+
+        if (!employee.toString().equals(defaultEmployee.toString())) {
+            EmployeeWrapper wrapper = new EmployeeWrapper().setId(employee.getId())
+                    .setJob(feign.getJobById(employee.getJobId()).getBody())
+                    .setFirstName(employee.getFirstName()).setLastName(employee.getLastName())
+                    .setQualification(employee.getQualification())
+                    .setJobStation(employee.getJobStation()).setSalary(employee.getSalary());
+            return Store.initialize(HttpStatus.OK, wrapper);
+        }
+
+        return Store.initialize(HttpStatus.OK, defaultWrapper);
     }
 
     //Find Employee By JobId
-    public Store<List<Employee>> findEmployeeWithSameJob(String jobId) {
+    public Store<List<EmployeeWrapper>> findEmployeeWithSameJob(String jobId) {
         List<Employee> employees = repo.findAllByJobId(jobId);
-        return !employees.isEmpty()? Store.initialize(HttpStatus.OK, employees) :
-                Store.initialize(HttpStatus.BAD_REQUEST, List.of(defaultEmployee));
+        List<EmployeeWrapper> wrappers = new ArrayList<>();
+
+        if (!employees.isEmpty()) {
+
+            for (Employee employee : employees) {
+                wrappers.add(new EmployeeWrapper().setId(employee.getId())
+                        .setJob(feign.getJobById(employee.getJobId()).getBody())
+                        .setFirstName(employee.getFirstName()).setLastName(employee.getLastName())
+                        .setQualification(employee.getQualification())
+                        .setJobStation(employee.getJobStation()).setSalary(employee.getSalary())
+                );
+            }
+
+            return Store.initialize(HttpStatus.OK, wrappers);
+        }
+
+        return Store.initialize(HttpStatus.BAD_REQUEST, List.of(defaultWrapper));
     }
 
     //Remove Employee By Id
@@ -66,6 +105,7 @@ public class EmployeeService {
     }
 
     //Remove Employee By JobId
+    @Transactional
     public Store<String> removeEmployeesOfSameJob(String jobId) {
 
         if (repo.findAllByJobId(jobId).isEmpty()) {

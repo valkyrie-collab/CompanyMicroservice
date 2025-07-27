@@ -11,8 +11,9 @@ public class Employee {
     private String firstName;
     private String lastName;
     private String jobStation;
+    private String jobId;
     private String qualification;
-    private int salary;
+    private double salary;
 
     public String getId() {return id;}
 
@@ -23,6 +24,8 @@ public class Employee {
     public String getJobStation() {return jobStation;}
 
     public String getQualification() {return qualification;}
+
+    public String getJobId() {return jobId;}
 
     public int getSalary() {return salary;}
 
@@ -51,8 +54,19 @@ public class Employee {
         return this;
     }
 
+    public Employee setJobId(String jobId) {
+        this.jobId = jobId;
+        return this;
+    }
+
     public Employee setSalary(int salary) {
         this.salary = salary;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return id + firstName + lastName +
+                jobStation + qualification + jobId + salary;
     }
 }
