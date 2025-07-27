@@ -27,7 +27,7 @@ public class Employee {
 
     public String getJobId() {return jobId;}
 
-    public int getSalary() {return salary;}
+    public double getSalary() {return salary;}
 
     public Employee setId(String id) {
         this.id = id;
@@ -59,7 +59,7 @@ public class Employee {
         return this;
     }
 
-    public Employee setSalary(int salary) {
+    public Employee setSalary(double salary) {
         this.salary = salary;
         return this;
     }

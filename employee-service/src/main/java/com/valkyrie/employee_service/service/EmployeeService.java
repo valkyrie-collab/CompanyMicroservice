@@ -8,6 +8,7 @@ import com.valkyrie.employee_service.model.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,21 +34,25 @@ public class EmployeeService {
 
     //Employee save and Update
     public Store<String> save(Employee employee) {
-        boolean checkId = employee.getId() == null && feign.getJobById(
-                employee.getJobId()).getStatusCode().equals(HttpStatusCode.valueOf(200));
+        try {
+            boolean checkId = employee.getId() == null && feign.getJobById(
+                    employee.getJobId()).getStatusCode().equals(HttpStatusCode.valueOf(200));
 
-        if (checkId) {
-            employee = employee.setId("employee" + UUID.randomUUID());
-            repo.save(employee);
-            return Store.initialize(HttpStatus.ACCEPTED,
-                    "Employee with ID = " + employee.getId() + " saved successfully......");
-        } else if (!repo.findById(employee.getId()).orElse(employee).toString().equals(employee.toString())) {
-            repo.save(employee);
-            return Store.initialize(HttpStatus.ACCEPTED,
-                    "Employee with ID = " + employee.getId() + " has been updated......");
+            if (checkId) {
+                employee = employee.setId("employee" + UUID.randomUUID());
+                repo.save(employee);
+                return Store.initialize(HttpStatus.ACCEPTED,
+                        "Employee with ID = " + employee.getId() + " saved successfully......");
+            } else if (!repo.findById(employee.getId()).orElse(employee).toString().equals(employee.toString())) {
+                repo.save(employee);
+                return Store.initialize(HttpStatus.ACCEPTED,
+                        "Employee with ID = " + employee.getId() + " has been updated......");
+            }
+
+            return Store.initialize(HttpStatus.BAD_REQUEST, "Employee not saved.....");
+        } catch (Exception e) {
+            return Store.initialize(HttpStatus.BAD_REQUEST, "Enter a valid Job id.......");
         }
-
-        return Store.initialize(HttpStatus.BAD_REQUEST, "Employee not saved.....");
     }
 
     //Find Employee By Id
