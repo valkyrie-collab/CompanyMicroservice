@@ -26,27 +26,33 @@ public class Employee {
 
     public int getSalary() {return salary;}
 
-    public void setId(String id) {
+    public Employee setId(String id) {
         this.id = id;
+        return this;
     }
 
-    public void setLastName(String lastName) {
+    public Employee setLastName(String lastName) {
         this.lastName = lastName;
+        return this;
     }
 
-    public void setFirstName(String firstName) {
+    public Employee setFirstName(String firstName) {
         this.firstName = firstName;
+        return this;
     }
 
-    public void setJobStation(String jobStation) {
+    public Employee setJobStation(String jobStation) {
         this.jobStation = jobStation;
+        return this;
     }
 
-    public void setQualification(String qualification) {
+    public Employee setQualification(String qualification) {
         this.qualification = qualification;
+        return this;
     }
 
-    public void setSalary(int salary) {
+    public Employee setSalary(int salary) {
         this.salary = salary;
+        return this;
     }
 }
