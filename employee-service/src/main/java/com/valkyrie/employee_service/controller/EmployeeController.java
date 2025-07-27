@@ -18,13 +18,19 @@ public class EmployeeController {
     private void setService(EmployeeService service) {this.service = service;}
 
     @PostMapping("/add-employee")
-    public ResponseEntity<String> save(@RequestBody Employee employee) {
+    public ResponseEntity<String> save(@RequestParam String token,
+                                       @RequestBody Employee employee) {
         Store<String> store = service.save(employee);
         return ResponseEntity.status(store.getStatus()).body(store.getInstance());
     }
 
     @PostMapping("/update-employee")
-    public ResponseEntity<String> update(@RequestBody Employee employee) {return save(employee);}
+    public ResponseEntity<String> update(@RequestParam String token,
+                                         @RequestParam String id,
+                                         @RequestBody Employee employee) {
+        employee = employee.setId(id);
+        return save(token, employee);
+    }
 
     @GetMapping("/find-employee-by-id")
     public ResponseEntity<EmployeeWrapper> employeeById(@RequestParam String id) {
