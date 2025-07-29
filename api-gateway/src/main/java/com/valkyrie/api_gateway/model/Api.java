@@ -26,12 +26,12 @@ public class Api {
     @Bean
     public RouterFunction<ServerResponse> routerFunction() {
 
-        return routeGet("job-service-get", "/job/**", "http://localhost:8081/")
-                .and(routePost("job-service-post", "/job/**", "http://localhost:8081/"))
-                .and(routeDelete("job-service-delete", "/job/**", "http://localhost:8081/"))
-                .and(routeGet("employee-service-get", "/employee/**", "http://localhost:8082/"))
-                .and(routePost("employee-service-Post", "/employee/**", "http://localhost:8082/"))
-                .and(routeDelete("employee-service-delete", "/employee/**", "http://localhost:8082/"))
-                .and(routePost("user", "/user/**", "http://localhost:8083/"));
+        return routeGet("job-service-get", "/job/**", "http://job-service:8081/")
+                .and(routePost("job-service-post", "/job/**", "http://job-service:8081/"))
+                .and(routeDelete("job-service-delete", "/job/**", "http://job-service:8081/"))
+                .and(routeGet("employee-service-get", "/employee/**", "http://employee-service:8082/"))
+                .and(routePost("employee-service-Post", "/employee/**", "http://employee-service:8082/"))
+                .and(routeDelete("employee-service-delete", "/employee/**", "http://employee-service:8082/"))
+                .and(routePost("user", "/user/**", "http://authentication-service:8083/"));
     }
 }
