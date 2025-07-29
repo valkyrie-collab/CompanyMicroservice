@@ -1,4 +1,4 @@
-package com.valkyrie.authentication_service.config;
+package com.valkyrie.api_gateway.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

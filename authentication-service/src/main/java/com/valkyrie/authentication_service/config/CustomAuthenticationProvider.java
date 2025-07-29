@@ -14,7 +14,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final CustomUserDetailsService service;
     private final BCryptPasswordEncoder ENCODER;
 
-    @Autowired
     public CustomAuthenticationProvider(CustomUserDetailsService service, BCryptPasswordEncoder ENCODER) {
         this.service = service; this.ENCODER = ENCODER;
     }

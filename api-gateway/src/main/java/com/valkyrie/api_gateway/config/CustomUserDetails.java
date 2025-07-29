@@ -1,15 +1,13 @@
-package com.valkyrie.authentication_service.config;
+package com.valkyrie.api_gateway.config;
 
-import com.valkyrie.authentication_service.model.User;
+import com.valkyrie.api_gateway.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
     private final User user;
@@ -49,7 +47,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return UserDetails.super.isAccountNonLocked();
     }
 
     @Override

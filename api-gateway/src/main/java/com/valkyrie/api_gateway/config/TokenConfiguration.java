@@ -1,4 +1,4 @@
-package com.valkyrie.authentication_service.config;
+package com.valkyrie.api_gateway.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
 public class TokenConfiguration{

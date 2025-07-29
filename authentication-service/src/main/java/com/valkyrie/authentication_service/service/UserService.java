@@ -49,7 +49,7 @@ public class UserService {
         );
 
         if (authentication.isAuthenticated()) {
-            token = config.generateToken(user.getUsername());
+            token = config.generateToken(user.getUsername(), authentication.getAuthorities());
         }
 
         return Store.initialize(HttpStatus.OK, token);

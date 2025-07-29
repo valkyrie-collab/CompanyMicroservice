@@ -16,12 +16,14 @@ public class UserController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<String> signIn(@RequestBody User user) {
+        user = user.setRole("ROLE_" + user.getRole().toUpperCase());
         Store<String> store = service.signIn(user);
         return ResponseEntity.status(store.getStatus()).body(store.getInstance());
     }
 
     @PostMapping("/log-in")
     public ResponseEntity<String> logIn(@RequestBody User user) {
+        user = user.setRole("ROLE_" + user.getRole().toUpperCase());
         Store<String> store = service.logIn(user);
         return ResponseEntity.status(store.getStatus()).body(store.getInstance());
     }
